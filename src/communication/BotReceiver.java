@@ -14,6 +14,7 @@ import models.BotDataHolder;
 import models.Instrument;
 import models.Message;
 import models.OpCodes;
+import models.Option;
 import models.Order;
 import models.PartialTrade;
 import models.Trade;
@@ -21,12 +22,15 @@ import models.Trade;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-//import control.Controller;
-//import control.Controller;
 
 public class BotReceiver implements Runnable {
 
-//	public Controller controller; 
+	private static final int INSTRUMENTS = 0;
+	private static final int MARKET_DATA = 1;
+	private static final int OPTIONS = 2;
+	
+	
+	
 	private BufferedReader inFromServer;
 	private Gson gson;
 	private BotDataHolder dataHolder;
@@ -39,10 +43,8 @@ public class BotReceiver implements Runnable {
 	public void addBufferedReader(BufferedReader reader) {
 		inFromServer = reader;
 	}
-	
-//	public void addController(Controller controller) {
-//		this.controller = controller;
-//	}
+
+
 
 	@Override
 	public void run() {
@@ -73,23 +75,24 @@ public class BotReceiver implements Runnable {
 	
 	public void logInAccepted(String json) {
 		
-		String[] instrumentsAndMD = gson.fromJson(json, String[].class);
+		String[] initData = gson.fromJson(json, String[].class);
 		
-		Instrument[] instruments = gson.fromJson(instrumentsAndMD[0], Instrument[].class);
+		Instrument[] instruments = gson.fromJson(initData[INSTRUMENTS], Instrument[].class);
 		dataHolder.setInstruments(instruments);
-		dataHolder.loggedIn();
-	
+		
+		Option [] options  = gson.fromJson(initData[OPTIONS], Option[].class);
+		dataHolder.setOptions(options);
 
-		
-		
-		BookStatus[] statusOfBooks = gson.fromJson(instrumentsAndMD[1], BookStatus[].class);
+		BookStatus[] statusOfBooks = gson.fromJson(initData[MARKET_DATA], BookStatus[].class);
 		for(BookStatus bookStatus : statusOfBooks) {
 			if(bookStatus != null) {
 				dataHolder.newMD(bookStatus);
 				
 			}
 		}
-
+		
+		
+		dataHolder.loggedIn();
 	}
 
 	public void marketDataReceived(String json) {

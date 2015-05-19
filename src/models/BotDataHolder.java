@@ -1,20 +1,23 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Observable;
+
 import models.BookStatus;
 
 public class BotDataHolder extends Observable {
 	
 	private HashMap<String, InstrumentState> instrumentStates;
 	private HashMap<String, Instrument> trueInstruments;
-	String myNickname;
+	private ArrayList<Option> options;
+	private String myNickname;
 	
 	
 	public BotDataHolder() {
-		instrumentStates = new HashMap<String, InstrumentState>();
-		trueInstruments = new HashMap<String, Instrument>();
+		instrumentStates 	= new HashMap<String, InstrumentState>();
+		trueInstruments 	= new HashMap<String, Instrument>();
 	}	
 	
 	private void update(InstrumentState instrumentState) {
@@ -28,12 +31,21 @@ public class BotDataHolder extends Observable {
 
 	public void setInstruments(Instrument[] instruments) {
 		
+		System.out.println("Instruments set!");
+		
 		for(Instrument instrument : instruments) {
 			String name = instrument.getName();
 			instrumentStates.put(name, new InstrumentState(name));
 			trueInstruments.put(name, instrument);
 		}
 		
+	}
+	
+	public void setOptions(Option[] options) {
+		
+		
+		this.options = new ArrayList<Option>(Arrays.asList(options));
+		System.out.println("Hej.");
 	}
 	
 	public Instrument getInstrument(String name) {
@@ -92,12 +104,18 @@ public class BotDataHolder extends Observable {
 		InstrumentState instrumentState = instrumentStates.get(instrumentName);
 		if(instrumentState != null) {
 			instrumentState.newMD(bookStatus);
-			System.out.println("instrument is not null");
 			update(instrumentState);
 			
 		}
-		System.out.println("Instrument is null");
+		
 	}
+
+
+	public ArrayList<Option> getOptions() {
+		return options;
+	}
+	
+	
 
 
 }

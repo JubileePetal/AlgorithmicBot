@@ -113,12 +113,11 @@ public class BotInitializer {
 		return outToServer;	
 	}
 	
-	
 
 	public void botLogin() {
 		
 		String username = "AlgoBot";
-		int usertype	= OpCodes.BOT;
+		int usertype	= OpCodes.ALGO_BOT;
 		receiver.setUserType(usertype);
 		if(sender.logIn(username, usertype)){
 			
