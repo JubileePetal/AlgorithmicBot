@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import models.Analytics;
 import models.BookStatus;
+import models.Bot;
 import models.BotDataHolder;
 import models.Instrument;
 import models.Message;
@@ -31,10 +33,11 @@ public class BotReceiver implements Runnable {
 	
 	
 	
-	private BufferedReader inFromServer;
-	private Gson gson;
-	private BotDataHolder dataHolder;
-	private int userType;
+	private BufferedReader 	inFromServer;
+	private Gson 			gson;
+	private BotDataHolder 	dataHolder;
+	private int 			userType;
+	private Bot				bot;
 	
 	public BotReceiver() {
 		gson = new Gson();
@@ -62,14 +65,16 @@ public class BotReceiver implements Runnable {
 		int messageType = message.getType();
 		
 		switch (messageType) {
-			case OpCodes.LOG_IN_ACCEPTED: logInAccepted(message.getJson());
-										   break; 
-			case OpCodes.ORDER_ADDED: orderAdded(message.getJson());
-										break;
-			case OpCodes.PARTIAL_TRADE: tradeMade(message.getJson());
-										break;
-			case OpCodes.MARKET_DATA: marketDataReceived(message.getJson());
-										break;
+			case OpCodes.LOG_IN_ACCEPTED: 	logInAccepted(message.getJson());
+										   	break; 
+			case OpCodes.ORDER_ADDED: 		orderAdded(message.getJson());
+											break;
+			case OpCodes.PARTIAL_TRADE: 	tradeMade(message.getJson());
+											break;
+			case OpCodes.MARKET_DATA: 		marketDataReceived(message.getJson());
+											break;					
+			case OpCodes.ANALYTICS:			analyticsReceived(message.getJson());
+											break;
 		}
 	}
 	
@@ -92,15 +97,34 @@ public class BotReceiver implements Runnable {
 		}
 		
 		
-		dataHolder.loggedIn();
+		
+		
+		//dataHolder.loggedIn();
+		
+		startBot(instruments, options);
 	}
-
+	
+	public void analyticsReceived(String json){
+		
+		Analytics analytics = gson.fromJson(json, Analytics.class);
+		if(analytics == null){
+			System.out.println("IS NUUUUULLL");
+		}
+		dataHolder.addAnalytics(analytics);
+		dataHolder.setNewAnalytics(true);
+	
+		
+	}
+	
+	
 	public void marketDataReceived(String json) {
 		BookStatus bookStatus = gson.fromJson(json, BookStatus.class);
 		dataHolder.newMD(bookStatus);
 	}
 	
 	public void tradeMade(String json) {
+		
+		System.out.println("BOT GOT TRADE!");
 		PartialTrade partialTrade = gson.fromJson(json, PartialTrade.class);
 		dataHolder.addTrade(partialTrade);
 	}
@@ -137,6 +161,19 @@ public class BotReceiver implements Runnable {
 	public void setUserType(int userType) {
 		this.userType = userType;
 	}
+
+	public void setBot(Bot bot) {
+		this.bot = bot;
+	}
+	
+	public void startBot(Instrument [] instruments, Option[] options){
+		
+		bot.setInstruments(instruments);
+		bot.setDataHolder(dataHolder);
+		
+		(new Thread(bot)).start();
+	}
+	
 	
 	
 }

@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import view.BotConsole;
+import view.BotPrompter;
 //import view.LogInPanel;
 import models.BotDataHolder;
 import communication.BotReceiver;
@@ -21,11 +23,14 @@ public class BotInitializer {
 	private BotReceiver 		receiver;
 	private BotDataHolder 		dataHolder;
 	private Bot 				bot;
+	private BotConsole			console;
+	private BotPrompter			prompter;
 
 
 	public void createBot(){
 		
 		bot = new Bot();
+		
 	}
 	
 	public BotInitializer(String host, int port) {
@@ -43,12 +48,26 @@ public class BotInitializer {
 
 	public void establishDependencies() {
 		
+		/**Order is important here, some things need others to be
+		 * initialized in order to start themselves.			*/
 		
 		sender.addOutputStream(outToServer);
 		receiver.addBufferedReader(inFromServer);
+	
 		dataHolder.addObserver(bot);
+		dataHolder.addObserver(console);
+		
+		prompter.setDataHolder(dataHolder);	
+		prompter.createPopUpWindow();
 		receiver.addDataHolder(dataHolder);
+		console.setPrompter(prompter);
+		
+		
 		bot.setSender(sender);
+		receiver.setBot(bot);
+	
+		console.build();
+	
 		
 
 
@@ -116,8 +135,8 @@ public class BotInitializer {
 
 	public void botLogin() {
 		
-		String username = "AlgoBot";
-		int usertype	= OpCodes.ALGO_BOT;
+		String username = 		OpNames.ALGORITHM_BOT;
+		int usertype	= 		OpCodes.ALGO_BOT;
 		receiver.setUserType(usertype);
 		if(sender.logIn(username, usertype)){
 			
@@ -126,9 +145,14 @@ public class BotInitializer {
 		
 	}
 	
-	public void startBot(){
+	
+
+	public void createConsoleAndPrompter() {
+			console 	= new BotConsole();
+			prompter	= new BotPrompter();
 		
-		(new Thread(bot)).start();
 	}
+	
+
 	
 }

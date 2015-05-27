@@ -9,10 +9,10 @@ public class MainABot {
 		
 		initializer.initializeCommunicationObjects();
 		initializer.initializeDataHolder();
+		initializer.createConsoleAndPrompter();
 		initializer.createBot();
 		
 		initializer.establishDependencies();
-		initializer.startBot();
 		initializer.startListeningToServer();
 		initializer.botLogin();
 		

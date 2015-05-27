@@ -6,19 +6,46 @@ import models.BookStatus;
 
 public class InstrumentState {
 
-	BookStatus marketData;
-	HashMap<Long, Order> orders;
+	BookStatus 				marketData;
+	HashMap<Long, Order> 	orders;
 	ArrayList<PartialTrade> trades;
+	int 					objectChanged;	
+	ArrayList<Option>		options;
+	int 					nrOfShares;
 	
 	private String myInstrument;
 	
+	
 	public InstrumentState(String instrumentName) {
 		
-		myInstrument = instrumentName;
-		orders = new HashMap<Long,Order>();
-		trades = new ArrayList<PartialTrade>();
+		myInstrument 	= instrumentName;
+		orders 			= new HashMap<Long,Order>();
+		trades 			= new ArrayList<PartialTrade>();
+		options			= new ArrayList<Option>();
+		objectChanged 	= 0;
+		nrOfShares		= 0;
+		
 
 	}
+	
+	
+	
+
+	public int getObjectChanged() {
+		return objectChanged;
+	}
+	
+	
+	public void setOptions(ArrayList<Option> newOptionsList){
+		
+		options = newOptionsList;
+	}
+
+	public void setObjectChanged(int objectChanged) {
+		this.objectChanged = objectChanged;
+	}
+
+
 
 	public void addOrder(Order order) {
 		long id = order.getId();
@@ -181,6 +208,27 @@ public class InstrumentState {
 		}
 		
 		return buyTop;
+	}
+
+
+
+	public void setNumberOfShares(int currentNrOfShares){
+		
+		nrOfShares = currentNrOfShares;
+	}
+	
+	
+	
+	
+	public int getNrOfShares() {
+		return nrOfShares;
+	}
+
+
+
+
+	public ArrayList<Option> getOptions() {
+		return options;
 	}
 	
 	
