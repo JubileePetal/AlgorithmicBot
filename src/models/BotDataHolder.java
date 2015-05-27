@@ -13,7 +13,7 @@ public class BotDataHolder extends Observable {
 	private HashMap<String, Instrument> 		trueInstruments;
 	private HashMap<String,Analytics>			analytics;
 	private ArrayList<Option> 					options;
-	private String 								myNickname;
+	private String 							myNickname;
 	private Portfolio							portfolio;
 	private boolean 							newAnalytics;
 	
@@ -178,7 +178,7 @@ public class BotDataHolder extends Observable {
 				type = "Put";
 			}
 			
-			if(options.get(i).getStatus() == OpCodes.SELL_OPTION){
+			if(options.get(i).getStatus()== OpCodes.SELL_OPTION){
 				type = "- "+ type;
 				System.out.println("HALOOOOOOOO");
 			}	
