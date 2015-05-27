@@ -101,62 +101,6 @@ public class Portfolio {
 	}
 
 
-//	public synchronized ArrayList<Option> getLongOptions(String instrumentName){
-//	
-//		return longOptions.get(instrumentName);
-//	}
-//
-//	public synchronized ArrayList<Option> getShortOptions(String instrumentName){
-//		
-//		return shortOptions.get(instrumentName);
-//	}
-
-
-	
-	
-	
-	
-//	public HashMap<Integer,Integer> getQuantities(String InstrumentName){
-//		
-//		HashMap<Integer,Integer> optionQuantities = new HashMap<Integer,Integer>();
-//		
-//		
-//		synchronized(options){ 
-//			
-//			ArrayList<Option> optionsList;
-//			optionsList = options.get(InstrumentName);
-//			if(optionsList == null){
-//				optionsList = new ArrayList<Option>();
-//			}else{
-//				
-//				
-//				for(Option o: optionsList){
-//					
-//					int ID 		= o.getId();
-//					int counter = 0;
-//					
-//					for(Option opts : optionsList){
-//						
-//						if(opts.getId() == ID){
-//							
-//							counter++;
-//						}
-//						
-//					}//inner for
-//					
-//					optionQuantities.put(ID, counter);
-//					
-//				}//outer for
-//				
-//			}//else
-//			
-//			
-//		}//synchronized
-//		
-//		
-//		return optionQuantities;
-//	}
-//	
 	
 	
 	private void newShortValue(int ID,int newAmount){
@@ -170,7 +114,7 @@ public class Portfolio {
 		longOptions.put(ID,newAmount);
 	}
 
-	private int getShortValue(int ID){
+	public int getShortValue(int ID){
 		
 		if(shortOptions.get(ID) == null){
 			return 0;
@@ -180,7 +124,7 @@ public class Portfolio {
 	}
 	
 	
-	private int getLongValue(int ID){
+	public int getLongValue(int ID){
 		
 		if(longOptions.get(ID) == null){
 			return 0;
@@ -207,7 +151,14 @@ public class Portfolio {
 	}
 	
 	
-	
+	public synchronized int getInstrumentShares(String instrumentName){
+		
+		if(shares.get(instrumentName) == null){
+			return 0;
+		}else{
+			return shares.get(instrumentName);
+		}	
+	}
 	
 	
 	

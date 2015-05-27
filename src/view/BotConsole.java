@@ -116,9 +116,7 @@ public class BotConsole extends JFrame implements KeyListener, Observer {
 	public void setPrompter(BotPrompter prompter) {
 		
 		myPrompter = prompter;
-		if(myPrompter != null){
-			System.out.println("YEEES");
-		}
+
 		
 	}
 	
@@ -126,9 +124,7 @@ public class BotConsole extends JFrame implements KeyListener, Observer {
 	public void triggerPrompter(){
 		
 		myPrompter.editPortfolio();
-		if(myPrompter != null){
-			System.out.println("WFT.....wees");
-		}
+
 		
 	}	
 

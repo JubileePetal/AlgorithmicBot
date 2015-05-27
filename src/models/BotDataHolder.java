@@ -13,7 +13,7 @@ public class BotDataHolder extends Observable {
 	private HashMap<String, Instrument> 		trueInstruments;
 	private HashMap<String,Analytics>			analytics;
 	private ArrayList<Option> 					options;
-	private String 							myNickname;
+	private String 								myNickname;
 	private Portfolio							portfolio;
 	private boolean 							newAnalytics;
 	
@@ -25,6 +25,16 @@ public class BotDataHolder extends Observable {
 		portfolio			= new Portfolio();
 	}	
 	
+	
+	
+	
+	public Portfolio getPortfolio() {
+		return portfolio;
+	}
+
+
+
+
 	private void update(InstrumentState instrumentState) {
 		setChanged();
 		notifyObservers(instrumentState);
