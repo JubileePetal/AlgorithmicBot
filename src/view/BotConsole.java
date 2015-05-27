@@ -74,11 +74,11 @@ public class BotConsole extends JFrame implements KeyListener, Observer {
          
         displayArea = new JTextArea("");
         displayArea.setEditable(false);
-       // displayArea.setBackground(Color.BLACK);
+        displayArea.setBackground(Color.BLACK);
         Font font = new Font("Jokerman", Font.PLAIN, 12);
         
-       // displayArea.setFont(font);
-        //displayArea.setForeground(Color.white);
+        displayArea.setFont(font);
+       	displayArea.setForeground(Color.white);
         JScrollPane scrollPane = new JScrollPane(displayArea);
         scrollPane.setPreferredSize(new Dimension(375, 225));
          
@@ -132,8 +132,10 @@ public class BotConsole extends JFrame implements KeyListener, Observer {
 	}	
 
 	
-	private void setCosoleText(ArrayList<Option> options){
+	private void setCosoleText(InstrumentState is){
 		
+		
+		ArrayList<Option> options = is.getOptions();
 		this.displayArea.setText("");
 		
 
@@ -154,13 +156,21 @@ public class BotConsole extends JFrame implements KeyListener, Observer {
 			double matTime	= options.get(i).getTimeToMaturity();
 			
 			if(options.get(i).getStatus() == OpCodes.SELL_OPTION){
-				type = " - "+ type;
+				type = "Sold "+ type;
 			
-			}	
-				this.displayArea.append(type + " "+ String.valueOf(strike) +" "
-					+ String.valueOf(matTime)+"\n");
+			}else{
+				
+				type = "Bought " +type; 
+				
+			}
+				
+				
+				
+				this.displayArea.append(type + " "+ "Strike: "+ String.valueOf(strike) + " TTM: "+String.valueOf(matTime)+"\n");
 			
 		}
+		
+		this.displayArea.append("Shares: "+ is.getNrOfShares());
 		
 		
 		
@@ -172,12 +182,12 @@ public class BotConsole extends JFrame implements KeyListener, Observer {
 
 		
 		final InstrumentState is = (InstrumentState)objectChanged;
-		System.out.println("Nr of shares: " +(is.getNrOfShares()));
+	//	System.out.println("Nr of shares: " +(is.getNrOfShares()));
 		
 		SwingUtilities.invokeLater(new Runnable() {
 		    public void run() {
 		    	
-		    	setCosoleText(is.getOptions());
+		    	setCosoleText(is);
 		    }
 		});
 		
