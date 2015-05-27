@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -27,7 +28,7 @@ public class BotConsole extends JFrame implements KeyListener, Observer {
 	  private JTextField 			typingArea;
 	  private static BotPrompter 	myPrompter;
 	  
-	  static final int 		P_KEY = 80;
+	  static final int 				P_KEY = 80;
 
 	
 	public BotConsole(String name) {
@@ -135,41 +136,65 @@ public class BotConsole extends JFrame implements KeyListener, Observer {
 	private void setCosoleText(InstrumentState is){
 		
 		
-		ArrayList<Option> options = is.getOptions();
+		HashMap<Integer, Integer> longOptions 	= is.getLongOptions();
+		HashMap<Integer, Integer> shortOptions	= is.getShortOptions();
+		HashMap<Integer, Option>  options		= is.getOptions();
+		
 		this.displayArea.setText("");
 		
-
 		
-		
-		for(int i = 0; i < options.size(); i++){
+		for(Integer i : options.keySet()){
 			
 			String type;
-			if(options.get(i).getType()== OpCodes.CALL_OPTION){
+			// if its not null and not zero its here and we have one in
+			// the portfolio!
+			if(!(longOptions.get(i) == null) && !(longOptions.get(i) == 0 )){
 				
-				type = "Call";
-			}else{
+				Option option = options.get(i);
+				if(option.getType()== OpCodes.CALL_OPTION){
+				
+					type = "Call";
+				}else{
+				
+					type = "Put";
+				}//if
+				
+				double strike 	= option.getStrikePrice();
+				double matTime	= option.getTimeToMaturity();
+				int    amount	= longOptions.get(i);
+				
+				this.displayArea.append(amount +"   Long " +type + ", "+ "Strike: "+ String.valueOf(strike) +
+						" TTM: "+String.valueOf(matTime)+"\n");
+				
+			}//if outer
 			
-				type = "Put";
-			}
+			
+			
+			if(!(shortOptions.get(i) == null) && !(shortOptions.get(i) == 0 )){
+				
+				Option option = options.get(i);
+				if(option.getType()== OpCodes.CALL_OPTION){
+				
+					type = "Call";
+				}else{
+				
+					type = "Put";
+				}//if
+				
+				double strike 	= option.getStrikePrice();
+				double matTime	= option.getTimeToMaturity();
+				int    amount	= shortOptions.get(i);
+				
+				this.displayArea.append(amount +"   Short " +type + ", "+ "Strike: "+ String.valueOf(strike) +
+						" TTM: "+String.valueOf(matTime)+"\n");
+				
+			}//if outer
+			
+		}//for
 		
-			double strike 	= options.get(i).getStrikePrice();
-			double matTime	= options.get(i).getTimeToMaturity();
-			
-			if(options.get(i).getStatus() == OpCodes.SELL_OPTION){
-				type = "Sold "+ type;
-			
-			}else{
-				
-				type = "Bought " +type; 
-				
-			}
-				
-				
-				
-				this.displayArea.append(type + " "+ "Strike: "+ String.valueOf(strike) + " TTM: "+String.valueOf(matTime)+"\n");
-			
-		}
 		
+		
+
 		this.displayArea.append("Shares: "+ is.getNrOfShares());
 		
 		

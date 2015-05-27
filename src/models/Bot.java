@@ -98,6 +98,7 @@ public class Bot implements Observer, Runnable{
 				
 				
 				newOrder(10, OpCodes.SELL_ORDER, 12);
+				//double portfolioDelta = 
 				// analyze stuff
 				
 				
