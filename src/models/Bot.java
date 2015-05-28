@@ -138,7 +138,7 @@ public class Bot implements Observer, Runnable{
 			}
 			
 			try {
-				Thread.sleep(4000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
