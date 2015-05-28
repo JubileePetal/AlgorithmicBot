@@ -13,7 +13,7 @@ public class BotDataHolder extends Observable {
 	private HashMap<String, Instrument> 		trueInstruments;
 	private HashMap<String,Analytics>			analytics;
 	private ArrayList<Option> 					options;
-	private String 							myNickname;
+	private String 								myNickname;
 	private Portfolio							portfolio;
 	private boolean 							newAnalytics;
 	
@@ -25,6 +25,16 @@ public class BotDataHolder extends Observable {
 		portfolio			= new Portfolio();
 	}	
 	
+	
+	
+	
+	public Portfolio getPortfolio() {
+		return portfolio;
+	}
+
+
+
+
 	private void update(InstrumentState instrumentState) {
 		setChanged();
 		notifyObservers(instrumentState);
@@ -49,7 +59,7 @@ public class BotDataHolder extends Observable {
 	public void setOptions(Option[] options) {
 	
 		this.options = new ArrayList<Option>(Arrays.asList(options));
-		System.out.println("Hej. Options set in BotDataHolder.");
+		portfolio.setOptions(this.options);
 	}
 	
 	public Instrument getInstrument(String name) {
@@ -178,10 +188,12 @@ public class BotDataHolder extends Observable {
 				type = "Put";
 			}
 			
-			if(options.get(i).getStatus()== OpCodes.SELL_OPTION){
-				type = "- "+ type;
-				System.out.println("HALOOOOOOOO");
-			}	
+
+//			if(options.get(i).getStatus()== OpCodes.SELL_OPTION){
+//				type = "- "+ type;
+//				System.out.println("HALOOOOOOOO");
+//			}	
+
 			
 			optionsAsStrings[i] = type + " "+ String.valueOf(strike) +" "
 					+ String.valueOf(matTime);	
@@ -197,34 +209,49 @@ public class BotDataHolder extends Observable {
 			
 			Option opt 			= options.get(chosenOptionIndex);
 
-			/***********************************************************/
-			String type;
-			if(opt.getType()== OpCodes.CALL_OPTION){
+			//if sell option
+			if(amount < 0){
+				portfolio.addSoldOptions(opt, Math.abs(amount));
 				
-				type = "Call";
 			}else{
-			
-				type = "Put";
-			}
-			double strike 	= opt.getStrikePrice();
-			double matTime	= opt.getTimeToMaturity();
-			
-			System.out.println(type + " "+ String.valueOf(strike) +" "
-					+ String.valueOf(matTime));
-			
-			System.out.println("Amount = " + amount);
-			/***********************************************************/
-			
-			while(amount > 0){
+				portfolio.addBoughtOptions(opt, Math.abs(amount));
 				
-				portfolio.addOption(options.get(chosenOptionIndex));
-				amount--;
 			}
+			
+			//Use the absolute value for the amount, but 
+			//if the amount is negative, add it to shortOptions,
+			//else add it to long options
+			
+			
+			
+//			int counter = Math.abs(amount);
+//			while(counter > 0){
+//				
+//				
+//				if(amount < 0){
+//					
+//					portfolio.addSoldOption(options.get(chosenOptionIndex));
+//				}else{
+//					portfolio.addBoughtOption(options.get(chosenOptionIndex));
+//				}
+//				
+//				
+//				counter--;
+//			}
 			
 			String instrumentName = options.get(chosenOptionIndex).getInstrument();
 			InstrumentState instrumentState = instrumentStates.get(instrumentName);
 			if(instrumentState != null) {
-				instrumentState.setOptions(portfolio.getOptions(instrumentName));
+//				instrumentState.setOptions(portfolio.getOptions(instrumentName));
+				//instrumentState.setLongOptions(portfolio.getLongOptions(instrumentName));
+				//instrumentState.setShortOptions(portfolio.getShortOptions(instrumentName));
+				
+				instrumentState.setLongOptions(portfolio.getLongOptions());
+				instrumentState.setShortOptions(portfolio.getShortOptions());
+				instrumentState.setOptions(portfolio.getOptions());
+				
+				
+				/*******************************************************************************/
 				instrumentState.setObjectChanged(OpCodes.OPTIONS_CHANGED);
 				update(instrumentState);
 				

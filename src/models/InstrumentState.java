@@ -2,6 +2,7 @@ package models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import models.BookStatus;
 
 public class InstrumentState {
@@ -10,7 +11,12 @@ public class InstrumentState {
 	HashMap<Long, Order> 	orders;
 	ArrayList<PartialTrade> trades;
 	int 					objectChanged;	
-	ArrayList<Option>		options;
+//	ArrayList<Option>		longOptions;
+//	ArrayList<Option>		shortOptions;
+	HashMap<Integer, Integer>		longOptions;
+	HashMap<Integer, Integer>		shortOptions;
+	HashMap<Integer, Option>		options;
+	
 	int 					nrOfShares;
 	
 	private String myInstrument;
@@ -18,12 +24,13 @@ public class InstrumentState {
 	
 	public InstrumentState(String instrumentName) {
 		
-		myInstrument 	= instrumentName;
-		orders 			= new HashMap<Long,Order>();
-		trades 			= new ArrayList<PartialTrade>();
-		options			= new ArrayList<Option>();
-		objectChanged 	= 0;
-		nrOfShares		= 0;
+		myInstrument 		= instrumentName;
+		orders 				= new HashMap<Long,Order>();
+		trades 				= new ArrayList<PartialTrade>();
+		longOptions			= new HashMap<Integer, Integer>	();
+		shortOptions		= new HashMap<Integer, Integer>	();
+		objectChanged 		= 0;
+		nrOfShares			= 0;
 		
 
 	}
@@ -36,9 +43,15 @@ public class InstrumentState {
 	}
 	
 	
-	public void setOptions(ArrayList<Option> newOptionsList){
+	public void setLongOptions(HashMap<Integer, Integer> newOptionsList){
 		
-		options = newOptionsList;
+		longOptions = newOptionsList;
+	}
+	
+	
+	public void setShortOptions(HashMap<Integer, Integer> newOptionsList){
+		
+		shortOptions = newOptionsList;
 	}
 
 	public void setObjectChanged(int objectChanged) {
@@ -224,12 +237,31 @@ public class InstrumentState {
 		return nrOfShares;
 	}
 
+	public HashMap<Integer, Integer> getShortOptions() {
+		return shortOptions;
+	}
+	
+
+
+	public HashMap<Integer, Integer> getLongOptions() {
+		return longOptions;
+	}
 
 
 
-	public ArrayList<Option> getOptions() {
+
+	public HashMap<Integer, Option> getOptions() {
 		return options;
 	}
+
+
+
+
+	public void setOptions(HashMap<Integer, Option> options) {
+		this.options = options;
+	}
+	
+	
 	
 	
 }

@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -38,11 +39,7 @@ public class Bot implements Observer, Runnable{
 
 	@Override
 	public void update(Observable observed, Object objectChanged) {
-		
-		BotDataHolder dh = (BotDataHolder)observed;
-		dh.getInstrumentNames();
-		System.out.println("Bot got update");
-		//InstrumentState is = (InstrumentState)objectChanged;
+
 		
 	}	
 	
@@ -69,10 +66,10 @@ public class Bot implements Observer, Runnable{
 		
 		
 		if(orderType == OpCodes.SELL_ORDER){
-		
+			System.out.println("New Sell order sent!");
 			newOrder.setToSellOrder();
 		}else{
-			
+			System.out.println("New buy order sent!");
 			newOrder.setToBuyOrder();
 		}
 		
@@ -96,17 +93,52 @@ public class Bot implements Observer, Runnable{
 				dataHolder.setNewAnalytics(false);
 				Analytics currentAnalytics = dataHolder.getAnalytics(OpNames.INSTRUMENT1);
 				
+				HashMap<Integer,Option> options = dataHolder.getPortfolio().getOptions();
 				
-				newOrder(10, OpCodes.SELL_ORDER, 12);
-				// analyze stuff
+				HashMap<Integer,Integer> optionsInPortfolio = new HashMap<Integer,Integer>();
+				
+				for(Integer i : options.keySet()){
+					
+					int longValue =  dataHolder.getPortfolio().getLongValue(i);
+					int shortValue = dataHolder.getPortfolio().getShortValue(i);
+					
+					//if we are long in this particular option
+					if(longValue > shortValue){
+						
+						optionsInPortfolio.put(i, longValue);
+						
+					}else{
+						
+						optionsInPortfolio.put(i, -shortValue);
+					}
+				}
 				
 				
+				double portfolioDelta = hedgeAssistant.portFolioDelta(optionsInPortfolio, currentAnalytics);
+				int  shares = dataHolder.getPortfolio().getInstrumentShares(OpNames.INSTRUMENT1);
+				System.out.println("Delta: " + portfolioDelta);
 				
+				//System.out.println("SHARE VALUEEE: " + shares);
+				int sharesToGet = hedgeAssistant.obtainOfUnderlying(portfolioDelta, shares);
+				System.out.println("Shares to get: " + sharesToGet);
+				
+				if(sharesToGet != 0){
+					if(sharesToGet > 0){
+						
+						newOrder(sharesToGet,OpCodes.BUY_ORDER,100000);
+						
+					}else{
+						
+						newOrder(Math.abs(sharesToGet),OpCodes.SELL_ORDER,1);
+					}
+					
+				}//if
+
 				
 			}
 			
 			try {
-				Thread.sleep(4000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
