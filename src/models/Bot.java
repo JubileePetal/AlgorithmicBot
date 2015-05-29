@@ -66,10 +66,10 @@ public class Bot implements Observer, Runnable{
 		
 		
 		if(orderType == OpCodes.SELL_ORDER){
-			System.out.println("New Sell order sent!");
+			
 			newOrder.setToSellOrder();
 		}else{
-			System.out.println("New buy order sent!");
+	
 			newOrder.setToBuyOrder();
 		}
 		
@@ -89,7 +89,6 @@ public class Bot implements Observer, Runnable{
 			
 			if(dataHolder.hasNewAnalytics()){
 				
-				System.out.println("all the analytics!");
 				dataHolder.setNewAnalytics(false);
 				Analytics currentAnalytics = dataHolder.getAnalytics(OpNames.INSTRUMENT1);
 				
@@ -116,11 +115,8 @@ public class Bot implements Observer, Runnable{
 				
 				double portfolioDelta = hedgeAssistant.portFolioDelta(optionsInPortfolio, currentAnalytics);
 				int  shares = dataHolder.getPortfolio().getInstrumentShares(OpNames.INSTRUMENT1);
-				System.out.println("Delta: " + portfolioDelta);
 				
-				//System.out.println("SHARE VALUEEE: " + shares);
 				int sharesToGet = hedgeAssistant.obtainOfUnderlying(portfolioDelta, shares);
-				System.out.println("Shares to get: " + sharesToGet);
 				
 				if(sharesToGet != 0){
 					if(sharesToGet > 0){

@@ -11,8 +11,6 @@ public class InstrumentState {
 	HashMap<Long, Order> 	orders;
 	ArrayList<PartialTrade> trades;
 	int 					objectChanged;	
-//	ArrayList<Option>		longOptions;
-//	ArrayList<Option>		shortOptions;
 	HashMap<Integer, Integer>		longOptions;
 	HashMap<Integer, Integer>		shortOptions;
 	HashMap<Integer, Option>		options;

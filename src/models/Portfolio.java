@@ -7,8 +7,6 @@ public class Portfolio {
 	
 	private HashMap<String, Integer>  			shares;
 	private HashMap<Integer,Option> 			options;
-	//private HashMap<String, ArrayList<Option>> 	longOptions;
-	//private HashMap<String, ArrayList<Option>> 	shortOptions;
 	 private HashMap<Integer, Integer> 			longOptions;
 	 private HashMap<Integer, Integer>	 		shortOptions;
 	
@@ -16,9 +14,6 @@ public class Portfolio {
 	public Portfolio() {
 		
 		shares 				= new HashMap<String,Integer>();
-//		options				= new HashMap<String,ArrayList<Option>>();
-//		longOptions			= new HashMap<String,ArrayList<Option>>();
-//		shortOptions		= new HashMap<String,ArrayList<Option>>();
 		options				= new HashMap<Integer,Option>();
 		longOptions			= new HashMap<Integer, Integer>();	
 		shortOptions		= new HashMap<Integer, Integer>();	

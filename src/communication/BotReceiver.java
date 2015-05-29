@@ -108,7 +108,7 @@ public class BotReceiver implements Runnable {
 		
 		Analytics analytics = gson.fromJson(json, Analytics.class);
 		if(analytics == null){
-			System.out.println("IS NUUUUULLL");
+			
 		}
 		dataHolder.addAnalytics(analytics);
 		dataHolder.setNewAnalytics(true);
@@ -124,7 +124,6 @@ public class BotReceiver implements Runnable {
 	
 	public void tradeMade(String json) {
 		
-		System.out.println("BOT GOT TRADE!");
 		PartialTrade partialTrade = gson.fromJson(json, PartialTrade.class);
 		dataHolder.addTrade(partialTrade);
 	}

@@ -203,7 +203,6 @@ public class BotConsole extends JFrame implements KeyListener, Observer {
 
 		
 		final InstrumentState is = (InstrumentState)objectChanged;
-	//	System.out.println("Nr of shares: " +(is.getNrOfShares()));
 		
 		SwingUtilities.invokeLater(new Runnable() {
 		    public void run() {

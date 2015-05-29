@@ -45,8 +45,7 @@ public class BotDataHolder extends Observable {
 	}
 
 	public void setInstruments(Instrument[] instruments) {
-		
-		System.out.println("Instruments set!");
+	
 		
 		for(Instrument instrument : instruments) {
 			String name = instrument.getName();
@@ -105,12 +104,10 @@ public class BotDataHolder extends Observable {
 		
 		int quantity = partialTrade.getOrder().getQuantity();
 		
-		System.out.println("Initial quantity: " + quantity);
+
 		
 		if(partialTrade.getOrder().isBuyOrSell() == OpCodes.SELL_ORDER){
-			System.out.println("IS SELL ORDER INDEED!");
 			quantity = quantity * -1;
-			System.out.println("Quantity should be negative: "+ quantity);
 		}
 		
 		
@@ -188,11 +185,6 @@ public class BotDataHolder extends Observable {
 				type = "Put";
 			}
 			
-
-//			if(options.get(i).getStatus()== OpCodes.SELL_OPTION){
-//				type = "- "+ type;
-//				System.out.println("HALOOOOOOOO");
-//			}	
 
 			
 			optionsAsStrings[i] = type + " "+ String.valueOf(strike) +" "
