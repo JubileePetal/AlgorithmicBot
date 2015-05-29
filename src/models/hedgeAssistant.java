@@ -31,7 +31,7 @@ public final class hedgeAssistant {
 	
 	static final public int obtainOfUnderlying(Double portfolioDelta, int amountIHave) {
 		
-		return (int) ((-1*portfolioDelta) - amountIHave);
+		return (int) ((-portfolioDelta) - amountIHave);
 	}
 
 }
